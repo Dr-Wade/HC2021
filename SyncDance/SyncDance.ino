@@ -5,6 +5,27 @@
 #include "MsTimer2.h"
 #include <EEPROM.h>
 
+#define MOONWALK_LEFT 'a'
+#define MOONWALK_RIGHT 'b'
+#define CRUISAITO 'c'
+#define SWING 'd'
+#define UPDOWN 'e'
+#define FLAPPING 'f'
+#define RUN 'g'
+#define BACKYARD 'h'
+#define BACKYARDSLOW 'i'
+#define GOINGUP 'j'
+#define DRUNK 'k'
+#define NOGRAVITY 'l'
+#define KICKLEFT 'm'
+#define KICKRIGHT 'n'
+#define LEGRAISE 'o'
+#define LEGRAISE1 'p'
+#define LEGRAISE2 'q'
+#define LEGRAISE3 'r'
+#define LEGRAISE4 's'
+#define SITDOWN 't'
+#define LATERAL 'u'
 
 /*
          ---------------
@@ -865,15 +886,15 @@ void start()
 
 void waitForStart()
 {
-    while (!shouldStart());
+    while (!objectIsClose());
     startDance();
-}
+} 
 
-bool shouldStart() {
+bool objectIsClose() {
   int distance1 = getDistance();
   int distance2 = getDistance();
   int distance3 = getDistance();
-  return distance1 > 10 && distance2 > 10 && distance3 > 10;
+  return distance1 < 10 && distance2 < 10 && distance3 < 10;
 }
 
 void startDance()
@@ -1066,5 +1087,124 @@ void Test_voltageMeasure(void) //Realization of Voltage Detection
     }
 }
 
-void loop() {
+void loop()
+{
+    if (irValue != '\0')// Bluetooth serial port data stream on app side (character acquisition is completed in timer 2)
+    {
+        serial_flag = false;
+        switch (irValue) {
+        case MOONWALK_RIGHT:
+            servoAttach();
+            moonWalkRight(3, t * 3);
+            servoDetach();
+            break;
+        case MOONWALK_LEFT:
+            servoAttach();
+            moonWalkLeft(3, t * 3);
+            servoDetach();
+            break;
+        case CRUISAITO:
+            servoAttach();
+            cruisaito(3, t * 3);
+            servoDetach();
+            break;
+        case SWING:
+            servoAttach();
+            swing(3, t * 3);
+            servoDetach();
+            break;
+        case UPDOWN:
+            servoAttach();
+            upDown(3, t * 3);
+            servoDetach();
+            break;
+        case FLAPPING:
+            servoAttach();
+            flapping(3, t * 3);
+            servoDetach();
+            break;
+        case RUN:
+            servoAttach();
+            run(3, t * 3);
+            servoDetach();
+            break;
+        case BACKYARD:
+            servoAttach();
+            backyard(3, t * 3);
+            servoDetach();
+            break;
+        case BACKYARDSLOW:
+            servoAttach();
+            backyardSlow(3, t * 3);
+            servoDetach();
+            break;
+        case GOINGUP:
+            servoAttach();
+            goingUp(t * 3);
+            servoDetach();
+            break;
+        case DRUNK:
+            servoAttach();
+            drunk(t * 3);
+            servoDetach();
+            break;
+        case NOGRAVITY:
+            servoAttach();
+            noGravity(t * 3);
+            servoDetach();
+            break;
+        case KICKLEFT:
+            servoAttach();
+            kickLeft(t * 3);
+            servoDetach();
+            break;
+        case KICKRIGHT:
+            servoAttach();
+            kickRight(t * 3);
+            servoDetach();
+            break;
+        case LEGRAISE:
+            servoAttach();
+            legRaise(t * 3, 1);
+            servoDetach();
+            break;
+        case LEGRAISE1:
+            servoAttach();
+            legRaise1(t * 3, 1);
+            servoDetach();
+            break;
+        case LEGRAISE2:
+            servoAttach();
+            legRaise2(3, t * 3, 1);
+            servoDetach();
+            break;
+        case LEGRAISE3:
+            servoAttach();
+            legRaise3(3, t * 3, 1);
+            servoDetach();
+            break;
+        case LEGRAISE4:
+            servoAttach();
+            legRaise4(t * 3, 1);
+            servoDetach();
+            break;
+        case SITDOWN:
+            servoAttach();
+            sitdown();
+            servoDetach();
+            break;
+        case LATERAL:
+            servoAttach();
+            lateral_fuerte(1, t * 3);
+            servoDetach();
+            break;
+        default:
+            break;
+        }
+        if (serial_flag == false)
+        {
+            irValue = '\0'; // Data Command Clearing Serial Cache
+        }
+    }
 }
+
