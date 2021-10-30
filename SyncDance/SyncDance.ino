@@ -7,13 +7,13 @@
 
 #define MOONWALK_LEFT 'a'
 #define MOONWALK_RIGHT 'b'
-#define CRUISAITO 'c'
+#define CRUSAITO 'c'
 #define SWING 'd'
-#define UPDOWN 'e'
-#define FLAPPING 'f'
-#define RUN 'g'
-#define BACKYARD 'h'
-#define BACKYARDSLOW 'i'
+#define UPDOWN 'v'
+#define FLAPPING 'w'
+#define RUN 'x'
+#define BACKYARD 'y'
+#define BACKYARDSLOW 'z'
 #define GOINGUP 'j'
 #define DRUNK 'k'
 #define NOGRAVITY 'l'
@@ -96,7 +96,7 @@ unsigned long voltageMeasureTime;
 unsigned long infraredMeasureTime;
 int LED_value = 255;
 
-char danceNum = 0;
+char moveNum = 0;
 double distance_value = 0;
 int st188Val_L;
 int st188Val_R;
@@ -126,6 +126,7 @@ int t = 495;
 double pause = 0;
 char irValue = '\0';
 bool serial_flag = false;
+bool danceFlag = false;
 
 bool delays(unsigned long ms)
 {
@@ -868,26 +869,14 @@ bool lateral_fuerte(boolean dir, int tempo)
 
 void start()
 {
-    mp3.stopPlay();
-    delay(10);
-    mp3.stopPlay();
-    delay(10);
-    mp3.stopPlay();
-    delay(10);
     waitForStart();
-    mp3.stopPlay();
-    delay(10);
-    mp3.stopPlay();
-    delay(10);
-    mp3.stopPlay();
-    delay(10);
-    servoAttach();
 }
 
 void waitForStart()
 {
-    while (!objectIsClose());
+    while (objectIsClose());
     startDance();
+    servoAttach();
 } 
 
 bool objectIsClose() {
@@ -902,7 +891,6 @@ void startDance()
     servoAttach();
     lateral_fuerte(1, t);
     lateral_fuerte(0, t);
-    goingUp(t);
     servoDetach();
 }
 
@@ -1094,108 +1082,129 @@ void loop()
         serial_flag = false;
         switch (irValue) {
         case MOONWALK_RIGHT:
+            mode = DANCE;
             servoAttach();
-            moonWalkRight(3, t * 3);
+            moonWalkRight(3, t);
             servoDetach();
             break;
         case MOONWALK_LEFT:
+            mode = DANCE;
             servoAttach();
-            moonWalkLeft(3, t * 3);
+            moonWalkLeft(3, t);
             servoDetach();
             break;
-        case CRUISAITO:
+        case CRUSAITO:
+            mode = DANCE;
             servoAttach();
-            cruisaito(3, t * 3);
+            crusaito(3, t);
             servoDetach();
             break;
         case SWING:
+            mode = DANCE;
             servoAttach();
-            swing(3, t * 3);
+            swing(3, t);
             servoDetach();
             break;
         case UPDOWN:
+            mode = DANCE;
             servoAttach();
-            upDown(3, t * 3);
+            upDown(3, t);
             servoDetach();
             break;
         case FLAPPING:
+            mode = DANCE;
             servoAttach();
-            flapping(3, t * 3);
+            flapping(3, t);
             servoDetach();
             break;
         case RUN:
+            mode = DANCE;
             servoAttach();
-            run(3, t * 3);
+            run(3, t);
             servoDetach();
             break;
         case BACKYARD:
+            mode = DANCE;
             servoAttach();
-            backyard(3, t * 3);
+            backyard(3, t);
             servoDetach();
             break;
         case BACKYARDSLOW:
+            mode = DANCE;
             servoAttach();
-            backyardSlow(3, t * 3);
+            backyardSlow(3, t);
             servoDetach();
             break;
         case GOINGUP:
+            mode = DANCE;
             servoAttach();
-            goingUp(t * 3);
+            goingUp(t);
             servoDetach();
             break;
         case DRUNK:
+            mode = DANCE;
             servoAttach();
-            drunk(t * 3);
+            drunk(t);
             servoDetach();
             break;
         case NOGRAVITY:
+            mode = DANCE;
             servoAttach();
-            noGravity(t * 3);
+            noGravity(t);
             servoDetach();
             break;
         case KICKLEFT:
+            mode = DANCE;
             servoAttach();
-            kickLeft(t * 3);
+            kickLeft(t);
             servoDetach();
             break;
         case KICKRIGHT:
+            mode = DANCE;
             servoAttach();
-            kickRight(t * 3);
+            kickRight(t);
             servoDetach();
             break;
         case LEGRAISE:
+            mode = DANCE;
             servoAttach();
-            legRaise(t * 3, 1);
+            legRaise(t, 1);
             servoDetach();
             break;
         case LEGRAISE1:
+            mode = DANCE;
             servoAttach();
-            legRaise1(t * 3, 1);
+            legRaise1(t, 1);
             servoDetach();
             break;
         case LEGRAISE2:
+            mode = DANCE;
             servoAttach();
-            legRaise2(3, t * 3, 1);
+            legRaise2(3, t, 1);
             servoDetach();
             break;
         case LEGRAISE3:
+            mode = DANCE;
             servoAttach();
-            legRaise3(3, t * 3, 1);
+            legRaise3(3, t, 1);
             servoDetach();
             break;
         case LEGRAISE4:
+            mode = DANCE;
             servoAttach();
-            legRaise4(t * 3, 1);
+            legRaise4(t, 1);
             servoDetach();
             break;
         case SITDOWN:
+            mode = DANCE;
             servoAttach();
             sitdown();
             servoDetach();
             break;
         case LATERAL:
+            mode = DANCE;
             servoAttach();
-            lateral_fuerte(1, t * 3);
+            lateral_fuerte(1, t);
             servoDetach();
             break;
         default:
@@ -1206,5 +1215,16 @@ void loop()
             irValue = '\0'; // Data Command Clearing Serial Cache
         }
     }
+    switch (mode)
+        {
+        case IDLE:
+            mp3.stopPlay();
+            servoDetach();
+            break;
+            default:
+                break;
+        
+        case DANCE:
+                break;
+        } 
 }
-
