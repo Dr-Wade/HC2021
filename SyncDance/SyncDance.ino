@@ -853,7 +853,6 @@ void start()
     delay(10);
     mp3.stopPlay();
     delay(10);
-    mp3.playSong(1, mp3.volume);
     waitForStart();
     mp3.stopPlay();
     delay(10);
@@ -866,13 +865,15 @@ void start()
 
 void waitForStart()
 {
-    bool started = false;
-    while (!started) {
-        distance_value = getDistance();
-        if (distance_value >= 1 && distance_value <= 500) delay(100)
-        else started = true;
-    }
+    while (!shouldStart());
     startDance();
+}
+
+bool shouldStart() {
+  int distance1 = getDistance();
+  int distance2 = getDistance();
+  int distance3 = getDistance();
+  return distance1 > 10 && distance2 > 10 && distance3 > 10;
 }
 
 void startDance()
@@ -1063,4 +1064,7 @@ void Test_voltageMeasure(void) //Realization of Voltage Detection
             digitalWrite(INDICATOR_LED_PIN, LOW);
         }
     }
+}
+
+void loop() {
 }
